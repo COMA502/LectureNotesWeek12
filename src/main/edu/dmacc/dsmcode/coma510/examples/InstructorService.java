@@ -9,6 +9,8 @@ public class InstructorService {
 
     public InstructorService(NamingService namingService, Database instructorDatabase) {
         this.instructorDatabase = instructorDatabase;
+
+        instructorDatabase.connect(namingService.getDatabaseName());
     }
 
     public List<String> getInstructorNames() {
