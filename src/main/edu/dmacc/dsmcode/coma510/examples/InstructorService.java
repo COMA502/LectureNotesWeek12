@@ -14,16 +14,21 @@ public class InstructorService {
     }
 
     public List<String> getInstructorNames() {
-        ArrayList<String> names = new ArrayList<>();
+        try {
+            instructorDatabase.query("get all instructors");
+            ArrayList<String> names = new ArrayList<>();
 
-        String[] nextResults = instructorDatabase.getNextResults();
-        while(nextResults != null) {
-            String name = nextResults[0];
-            names.add(name);
+            String[] nextResults = instructorDatabase.getNextResults();
+            while (nextResults != null) {
+                String name = nextResults[0];
+                names.add(name);
 
-            nextResults = instructorDatabase.getNextResults();
+                nextResults = instructorDatabase.getNextResults();
+            }
+
+            return names;
+        } finally {
+            instructorDatabase.closeConnection();
         }
-
-        return names;
     }
 }

@@ -2,11 +2,9 @@ package edu.dmacc.dsmcode.coma510.examples;
 
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class InstructorServiceTest {
@@ -43,8 +41,8 @@ public class InstructorServiceTest {
     @Test
     public void shouldReturnMockInstructorNames() {
         Database database = mock(Database.class);
-        doReturn(new String[] {"Greg", "2"})
-                .doReturn(new String[] {"John", "1"})
+        doReturn(new String[]{"Greg", "2"})
+                .doReturn(new String[]{"John", "1"})
                 .doReturn(null)
                 .when(database)
                 .getNextResults();
@@ -71,10 +69,36 @@ public class InstructorServiceTest {
         verify(database).connect(expectedName);//default is times(1)
     }
 
-//    @Test
-//    public void shouldQueryAllInstructors() {
-//        Database database = mock(Database.class);
-//
-//        new InstructorService(null)
-//    }
+    @Test
+    public void shouldQueryAllInstructors() {
+        Database database = mock(Database.class);
+
+        new InstructorService(mock(NamingService.class), database)
+                .getInstructorNames();
+
+        verify(database).query("get all instructors");
+    }
+
+    @Test
+    public void shouldCloseConnection() {
+        Database database = mock(Database.class);
+
+        new InstructorService(mock(NamingService.class), database)
+                .getInstructorNames();
+
+        verify(database).closeConnection();
+    }
+
+    @Test
+    public void shouldCloseConnectionEvenWithException() {
+        Database database = mock(Database.class);
+        doThrow(new RuntimeException()).when(database).getNextResults();
+
+        try {
+            new InstructorService(mock(NamingService.class), database)
+                    .getInstructorNames();
+        } catch(RuntimeException e) {}
+
+        verify(database).closeConnection();
+    }
 }
