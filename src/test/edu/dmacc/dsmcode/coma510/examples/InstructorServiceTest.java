@@ -2,9 +2,12 @@ package edu.dmacc.dsmcode.coma510.examples;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 public class InstructorServiceTest {
 
@@ -17,6 +20,24 @@ public class InstructorServiceTest {
     public void shouldReturnStubInstructorNames() {
         InstructorService service = new InstructorService(
                 null, new StubDatabase());
+
+        List<String> instructorNames = service.getInstructorNames();
+
+        assertEquals(2, instructorNames.size());
+        assertEquals("Greg", instructorNames.get(0));
+        assertEquals("John", instructorNames.get(1));
+    }
+
+    @Test
+    public void shouldReturnMockInstructorNames() {
+        Database database = mock(Database.class);
+        doReturn(new String[] {"Greg", "2"})
+                .doReturn(new String[] {"John", "1"})
+                .doReturn(null)
+                .when(database)
+                .getNextResults();
+        InstructorService service = new InstructorService(
+                null, database);
 
         List<String> instructorNames = service.getInstructorNames();
 
