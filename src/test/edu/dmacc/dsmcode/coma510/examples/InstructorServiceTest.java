@@ -19,7 +19,7 @@ public class InstructorServiceTest {
     @Test
     public void shouldReturnStubInstructorNames() {
         InstructorService service = new InstructorService(
-                null, new StubDatabase());
+                mock(NamingService.class), new StubDatabase());
 
         List<String> instructorNames = service.getInstructorNames();
 
@@ -32,7 +32,7 @@ public class InstructorServiceTest {
     public void shouldReturnEmptyListForNoInstructors() {
         Database database = mock(Database.class);
         doReturn(null).when(database).getNextResults();
-        InstructorService service = new InstructorService(null, database);
+        InstructorService service = new InstructorService(mock(NamingService.class), database);
 
         List<String> instructorNames = service.getInstructorNames();
 
@@ -49,7 +49,7 @@ public class InstructorServiceTest {
                 .when(database)
                 .getNextResults();
         InstructorService service = new InstructorService(
-                null, database);
+                mock(NamingService.class), database);
 
         List<String> instructorNames = service.getInstructorNames();
 
@@ -70,4 +70,11 @@ public class InstructorServiceTest {
 //        verify(database, times(1)).connect();
         verify(database).connect(expectedName);//default is times(1)
     }
+
+//    @Test
+//    public void shouldQueryAllInstructors() {
+//        Database database = mock(Database.class);
+//
+//        new InstructorService(null)
+//    }
 }
